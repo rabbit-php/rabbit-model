@@ -1,0 +1,20 @@
+{
+  "name": "rabbit/model",
+  "description": "rabbit model",
+  "type": "library",
+  "require": {
+    "respect/validation": "^1.1"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "albert",
+      "email": "63851587@qq.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "rabbit\\model\\": "src/"
+    }
+  }
+}
