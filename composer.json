@@ -3,6 +3,7 @@
   "description": "rabbit model",
   "type": "library",
   "require": {
+    "php": ">=7.1.0",
     "respect/validation": "^1.1"
   },
   "license": "MIT",
