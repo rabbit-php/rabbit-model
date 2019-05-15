@@ -7,6 +7,8 @@ namespace rabbit\validation;
 use rabbit\contract\ArrayableTrait;
 use Respect\Validation\Validator;
 
+defined('BREAKS') or define('BREAKS', PHP_SAPI === 'cli' ? PHP_EOL : '</br>');
+
 /**
  * Class Model
  * @package rabbit\validation
@@ -116,29 +118,37 @@ abstract class Model
 
     /**
      * @param array|null $attributeNames
+     * @param bool $firstReturn
      * @param bool $clearErrors
      * @return bool
      */
-    public function validate(array $attributeNames = null, $clearErrors = true)
+    public function validate(array $attributeNames = null, bool $firstReturn = false, bool $clearErrors = true)
     {
         if ($clearErrors) {
             $this->clearErrors();
         }
 
+        if (empty($attributeNames)) {
+            $attributeNames = array_keys($this->attributes);
+        }
+
         foreach ($this->rules() as $rule) {
             list($properties, $validator) = $rule;
             foreach ($properties as $property) {
-                if ($attributeNames !== null && !in_array($property, $attributeNames)) {
+                if (!in_array($property, $attributeNames)) {
                     continue;
                 }
                 if ($validator instanceof Validator) {
-                    if (!$validator->validate($this->$property)) {
+                    if (!$validator->validate($this->attributes[$property])) {
                         $this->addError($property, $validator->reportError($property)->getMessage());
+                        if ($firstReturn) {
+                            return false;
+                        }
                     }
                 } elseif (is_callable($validator)) {
-                    $this->$property = call_user_func($validator);
+                    $this->attributes[$property] = call_user_func($validator);
                 } else {
-                    empty($this->$property) && $this->$property = $validator;
+                    !isset($this->attributes[$property]) && $this->attributes[$property] = $validator;
                 }
             }
         }
