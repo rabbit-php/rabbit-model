@@ -1,17 +1,14 @@
 <?php
 
 
-namespace rabbit\validation;
+namespace rabbit\model;
 
 
 use rabbit\contract\ArrayableTrait;
-use Respect\Validation\Validator;
-
-defined('BREAKS') or define('BREAKS', PHP_SAPI === 'cli' ? PHP_EOL : '</br>');
 
 /**
  * Class Model
- * @package rabbit\validation
+ * @package rabbit\model
  */
 abstract class Model
 {
@@ -43,7 +40,7 @@ abstract class Model
     /**
      * @return array
      */
-    abstract function rules(): array;
+    abstract static function rules(): array;
 
     /**
      * @param string|null $attribute
@@ -64,6 +61,16 @@ abstract class Model
     public function addError(string $attribute, string $error = '')
     {
         $this->_errors[$attribute][] = $error;
+    }
+
+    /**
+     * @param array $errors
+     */
+    public function addErrors(array $errors): void
+    {
+        foreach ($errors as $attribute => $msg) {
+            $this->addError($attribute, $msg);
+        }
     }
 
     /**
@@ -118,40 +125,23 @@ abstract class Model
 
     /**
      * @param array|null $attributeNames
+     * @param bool $throwAble
      * @param bool $firstReturn
      * @param bool $clearErrors
      * @return bool
      */
-    public function validate(array $attributeNames = null, bool $firstReturn = false, bool $clearErrors = true)
-    {
+    public function validate(
+        array $attributeNames = null,
+        bool $throwAble = true,
+        bool $firstReturn = false,
+        bool $clearErrors = true
+    ) {
         if ($clearErrors) {
             $this->clearErrors();
         }
 
-        if (empty($attributeNames)) {
-            $attributeNames = array_keys($this->attributes);
-        }
-
-        foreach ($this->rules() as $rule) {
-            list($properties, $validator) = $rule;
-            foreach ($properties as $property) {
-                if (!in_array($property, $attributeNames)) {
-                    continue;
-                }
-                if ($validator instanceof Validator) {
-                    if (!$validator->validate($this->attributes[$property])) {
-                        $this->addError($property, $validator->reportError($property)->getMessage());
-                        if ($firstReturn) {
-                            return false;
-                        }
-                    }
-                } elseif (is_callable($validator)) {
-                    $this->attributes[$property] = call_user_func($validator);
-                } else {
-                    !isset($this->attributes[$property]) && $this->attributes[$property] = $validator;
-                }
-            }
-        }
+        $errors = ValidateHelper::validate($this->attributes, self::rules(), $throwAble, $firstReturn, $attributeNames);
+        $this->addErrors($errors);
 
         return !$this->hasErrors();
     }
