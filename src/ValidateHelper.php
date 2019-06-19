@@ -58,7 +58,7 @@ class ValidateHelper
             }
         }
 
-        if ($throwAble) {
+        if ($throwAble && $errors) {
             throw new \InvalidArgumentException(self::getErrorString($errors));
         }
         return $errors;
