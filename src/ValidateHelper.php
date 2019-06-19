@@ -40,12 +40,7 @@ class ValidateHelper
                 if ($validator instanceof Validatable) {
                     if (!$validator->validate(ArrayHelper::getValue($attributes, $property))) {
                         $exception = $validator->reportError($property);
-                        $msg = $exception->getMessage();
-                        if (isset($errors[$property]) && $errors[$property] !== $msg) {
-                            $errors[$property] = $errors[$property] . BREAKS . $msg;
-                        } else {
-                            $errors[$property] = $msg;
-                        }
+                        $errors[$property] = $exception->getMessage();
                         if ($firstReturn) {
                             if ($throwAble) {
                                 throw $exception;
@@ -75,6 +70,12 @@ class ValidateHelper
      */
     public static function getErrorString(array $error): string
     {
-        return implode(BREAKS, $error);
+        $errors = [];
+        foreach ($error as $name => $es) {
+            if (!empty($es)) {
+                $errors[$name] = reset($es);
+            }
+        }
+        return implode(BREAKS, $errors);
     }
 }
