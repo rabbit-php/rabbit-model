@@ -4,7 +4,7 @@
 namespace rabbit\model;
 
 use rabbit\helper\ArrayHelper;
-use Respect\Validation\Validator;
+use Respect\Validation\Validatable;
 
 defined('BREAKS') or define('BREAKS', PHP_SAPI === 'cli' ? PHP_EOL : '</br>');
 
@@ -37,7 +37,7 @@ class ValidateHelper
                 if (!empty($attributeNames) && !in_array($property, $attributeNames)) {
                     continue;
                 }
-                if ($validator instanceof Validator) {
+                if ($validator instanceof Validatable) {
                     if (!$validator->validate(ArrayHelper::getValue($attributes, $property))) {
                         $exception = $validator->reportError($property);
                         $msg = $exception->getMessage();
