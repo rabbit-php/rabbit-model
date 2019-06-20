@@ -32,7 +32,6 @@ class ValidateHelper
         $errors = [];
         foreach ($rules as $rule) {
             list($properties, $validator) = $rule;
-            $errProperties = [];
             foreach ($properties as $property) {
                 if (!empty($attributeNames) && !in_array($property, $attributeNames)) {
                     continue;
@@ -40,7 +39,7 @@ class ValidateHelper
                 if ($validator instanceof Validatable) {
                     if (!$validator->validate(ArrayHelper::getValue($attributes, $property))) {
                         $exception = $validator->reportError($property);
-                        $errors[$property] = $exception->getMessage();
+                        $errors[$property][] = str_replace("These rules must pass for ", '', $exception->getMessage());
                         if ($firstReturn) {
                             if ($throwAble) {
                                 throw $exception;
@@ -48,7 +47,6 @@ class ValidateHelper
                                 return $errors;
                             }
                         }
-                        $errProperties[] = $property;
                     }
                 } elseif (is_callable($validator)) {
                     $attributes[$property] = call_user_func($validator);
