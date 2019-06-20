@@ -40,7 +40,7 @@ abstract class Model
     /**
      * @return array
      */
-    abstract static function rules(): array;
+    abstract public static function rules(): array;
 
     /**
      * @param string|null $attribute
