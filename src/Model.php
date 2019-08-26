@@ -32,7 +32,11 @@ abstract class Model
     public function load(array $columns): self
     {
         foreach ($columns as $name => $value) {
-            $this->attributes[$name] = $value;
+            if (property_exists($this, $name)) {
+                $this->$name = $value;
+            } else {
+                $this->attributes[$name] = $value;
+            }
         }
         return $this;
     }
@@ -140,7 +144,8 @@ abstract class Model
             $this->clearErrors();
         }
 
-        $errors = ValidateHelper::validate($this->attributes, self::rules(), $throwAble, $firstReturn, $attributeNames);
+        $errors = ValidateHelper::validate($this->attributes, static::rules(), $throwAble, $firstReturn,
+            $attributeNames);
         $this->addErrors($errors);
 
         return !$this->hasErrors();
