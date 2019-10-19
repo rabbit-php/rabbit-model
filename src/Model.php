@@ -3,7 +3,6 @@
 
 namespace rabbit\model;
 
-
 use rabbit\contract\ArrayableTrait;
 
 /**
@@ -144,8 +143,13 @@ abstract class Model
             $this->clearErrors();
         }
 
-        $errors = ValidateHelper::validate($this->attributes, static::rules(), $throwAble, $firstReturn,
-            $attributeNames);
+        $errors = ValidateHelper::validate(
+            $this->attributes,
+            static::rules(),
+            $throwAble,
+            $firstReturn,
+            $attributeNames
+        );
         $this->addErrors($errors);
 
         return !$this->hasErrors();
