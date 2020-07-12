@@ -1,19 +1,20 @@
 <?php
+declare(strict_types=1);
 
+namespace Rabbit\Model;
 
-namespace rabbit\model;
-
-use rabbit\contract\ArrayableTrait;
+use Rabbit\Base\Contract\ArrayAbleTrait;
 
 /**
  * Class Model
- * @package rabbit\model
+ * @package Rabbit\Model
  */
 abstract class Model
 {
     use ArrayableTrait;
+
     /** @var array */
-    protected $_errors;
+    protected array $_errors;
 
     /**
      * Model constructor.
@@ -48,7 +49,7 @@ abstract class Model
     /**
      * @param string|null $attribute
      */
-    public function clearErrors(string $attribute = null)
+    public function clearErrors(string $attribute = null): void
     {
         if ($attribute === null) {
             $this->_errors = [];
@@ -61,7 +62,7 @@ abstract class Model
      * @param string $attribute
      * @param string $error
      */
-    public function addError(string $attribute, string $error = '')
+    public function addError(string $attribute, string $error = ''): void
     {
         $this->_errors[$attribute][] = $error;
     }
@@ -78,9 +79,9 @@ abstract class Model
 
     /**
      * @param string|null $attribute
-     * @return array|mixed
+     * @return array
      */
-    public function getErrors(string $attribute = null)
+    public function getErrors(string $attribute = null): array
     {
         if ($attribute === null) {
             return $this->_errors ?? [];
@@ -91,9 +92,9 @@ abstract class Model
 
     /**
      * @param string $attribute
-     * @return mixed|null
+     * @return string|null
      */
-    public function getFirstError(string $attribute)
+    public function getFirstError(string $attribute): ?string
     {
         return isset($this->_errors[$attribute]) ? reset($this->_errors[$attribute]) : null;
     }
@@ -133,12 +134,9 @@ abstract class Model
      * @param bool $clearErrors
      * @return bool
      */
-    public function validate(
-        array $attributeNames = null,
-        bool $throwAble = true,
-        bool $firstReturn = false,
-        bool $clearErrors = true
-    ) {
+    public function validate(array $attributeNames = null, bool $throwAble = true, bool $firstReturn = false, bool $clearErrors = true
+    ): bool
+    {
         if ($clearErrors) {
             $this->clearErrors();
         }
