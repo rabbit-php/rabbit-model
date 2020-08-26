@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\Model;
@@ -134,8 +135,7 @@ abstract class Model
      * @param bool $clearErrors
      * @return bool
      */
-    public function validate(array $attributeNames = null, bool $throwAble = true, bool $firstReturn = false, bool $clearErrors = true
-    ): bool
+    public function validate(array $attributeNames = null, bool $throwAble = true, bool $firstReturn = false, bool $clearErrors = true): bool
     {
         if ($clearErrors) {
             $this->clearErrors();

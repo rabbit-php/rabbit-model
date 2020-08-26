@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
 
-namespace rabbit\model;
+namespace Rabbit\Model;
 
-use rabbit\helper\ArrayHelper;
+use Rabbit\Base\Helper\ArrayHelper;
 use Respect\Validation\Validatable;
-
-defined('BREAKS') or define('BREAKS', PHP_SAPI === 'cli' ? PHP_EOL : '</br>');
 
 /**
  * Class ValidateHelper
- * @package rabbit\model
+ * @package Rabbit\Model
  */
 class ValidateHelper
 {
@@ -74,6 +73,6 @@ class ValidateHelper
                 $errors[$name] = reset($es);
             }
         }
-        return implode(BREAKS, $errors);
+        return implode(PHP_EOL, $errors);
     }
 }
