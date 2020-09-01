@@ -38,7 +38,7 @@ class ValidateHelper
                 if ($validator instanceof Validatable) {
                     if (!$validator->validate(ArrayHelper::getValue($attributes, $property))) {
                         $exception = $validator->reportError($property);
-                        $errors[$property][] = str_replace("These rules must pass for ", '', $exception->getMessage());
+                        $errors[$property][] = $exception->getMessage();
                         if ($firstReturn) {
                             if ($throwAble) {
                                 throw $exception;
