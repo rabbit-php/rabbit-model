@@ -141,8 +141,10 @@ abstract class Model
             $this->clearErrors();
         }
 
+        $arr = array_merge($this->attributes, get_object_vars($this));
+
         $errors = ValidateHelper::validate(
-            $this->attributes,
+            $arr,
             static::rules(),
             $throwAble,
             $firstReturn,
