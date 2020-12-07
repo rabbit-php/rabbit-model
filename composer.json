@@ -5,7 +5,7 @@
   "require": {
     "php": ">=7.4.0",
     "rabbit/base": "dev-master",
-    "respect/validation": "^1.1"
+    "respect/validation": "^2"
   },
   "require-dev": {
     "phpunit/phpunit": "*"
