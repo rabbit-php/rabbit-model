@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace Rabbit\Model;
 
-use Rabbit\Base\Contract\ArrayAbleTrait;
-
 /**
  * Class Model
  * @package Rabbit\Model
  */
 abstract class Model
 {
-    use ArrayableTrait;
-
-    /** @var array */
-    protected array $_errors;
+    private array $_errors;
 
     /**
      * Model constructor.
@@ -35,8 +30,6 @@ abstract class Model
         foreach ($columns as $name => $value) {
             if (property_exists($this, $name)) {
                 $this->$name = $value;
-            } else {
-                $this->attributes[$name] = $value;
             }
         }
         return $this;
@@ -141,7 +134,7 @@ abstract class Model
             $this->clearErrors();
         }
 
-        $arr = array_merge($this->attributes, get_object_vars($this));
+        $arr = get_object_vars($this);
 
         $errors = ValidateHelper::validate(
             $arr,
