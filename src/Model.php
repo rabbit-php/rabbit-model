@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Rabbit\Model;
 
+use Rabbit\Base\Core\BaseObject;
+
 /**
  * Class Model
  * @package Rabbit\Model
  */
-abstract class Model
+abstract class Model extends BaseObject
 {
     private array $_errors;
 
@@ -25,20 +27,20 @@ abstract class Model
      * @param array $columns
      * @return Model
      */
-    public function load(array $columns): self
+    public function load(array $columns): bool
     {
         foreach ($columns as $name => $value) {
             if (property_exists($this, $name)) {
                 $this->$name = $value;
             }
         }
-        return $this;
+        return true;
     }
 
     /**
      * @return array
      */
-    abstract public static function rules(): array;
+    abstract public function rules(): array;
 
     /**
      * @param string|null $attribute
@@ -138,7 +140,7 @@ abstract class Model
 
         $errors = ValidateHelper::validate(
             $arr,
-            static::rules(),
+            $this->rules(),
             $throwAble,
             $firstReturn,
             $attributeNames
