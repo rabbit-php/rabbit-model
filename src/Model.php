@@ -20,7 +20,7 @@ abstract class Model extends BaseObject
      */
     public function __construct(array $columns = [])
     {
-        $this->load($columns);
+        $columns && $this->load($columns);
     }
 
     /**
