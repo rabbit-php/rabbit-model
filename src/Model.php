@@ -147,6 +147,10 @@ abstract class Model extends BaseObject
         );
         $this->addErrors($errors);
 
+        foreach ($arr as $name => $value) {
+            $this->$name = $value;
+        }
+
         return !$this->hasErrors();
     }
 }
